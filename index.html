@@ -1,10 +1,24 @@
 <!doctype html><meta charset=utf-8><title>Local Mind — Private On-Device AI for Mac</title><style>:root{--fg:#111;--mut:#666;--ac:#0a5}*{box-sizing:border-box}body{max-width:46rem;margin:0 auto;padding:3rem 1.2rem;font:16px/1.65 -apple-system,system-ui,Segoe UI,sans-serif;color:var(--fg)}h1{font-size:2rem;margin:.2rem 0}h2{margin-top:2rem}.tag{color:var(--mut);font-size:1.1rem}nav{margin:1.5rem 0;font-size:.95rem}nav a{margin-right:1rem;color:var(--ac);text-decoration:none}a{color:var(--ac)}.pill{display:inline-block;background:#eef;border-radius:1rem;padding:.15rem .7rem;margin:.2rem .3rem .2rem 0;font-size:.9rem}footer{margin-top:3rem;color:var(--mut);font-size:.85rem;border-top:1px solid #eee;padding-top:1rem}pre{white-space:pre-wrap}</style>
 <h1>Local Mind</h1>
-<p class=tag>The best open-source LLM, running privately on your Mac. No cloud. No subscription. Automatically fit to your Mac.</p>
+<p class=tag>Open-source language models, and the coding agents that use them, running entirely on your Mac. No cloud. No account. No API key.</p>
 <nav><a href="./privacy.html">Privacy</a><a href="./support.html">Support</a></nav>
-<p>Local Mind runs state-of-the-art open-source language models — GLM-5.2 and DeepSeek-V4-Flash — entirely on your Apple Silicon Mac, through a hand-written Metal engine. Your prompts and data never leave your machine.</p>
-<p><span class=pill>100% private</span><span class=pill>Offline-capable</span><span class=pill>Pay once</span><span class=pill>Auto-fits your Mac</span><span class=pill>OpenAI-compatible</span></p>
-<h2>How it works</h2>
-<p>Tell the app what matters — speed, quality, context length — and it detects your chip, GPU, and unified memory, then picks the best model and execution mode that actually fits. One button: Download &amp; Run. No terminal, no config.</p>
-<p>Model weights are large open-source downloads (a few GB up to ~80 GB depending on your Mac). The app shows the exact size and asks before downloading. Requires an Apple Silicon Mac.</p>
+<p>Local Mind picks a model that actually fits your Apple Silicon Mac, serves it locally, and points your existing coding agents at it. Your prompts, your code, and your files stay on the machine.</p>
+<p><span class=pill>Private by default</span><span class=pill>Offline-capable</span><span class=pill>Pay once</span><span class=pill>Auto-fits your Mac</span><span class=pill>OpenAI &amp; Anthropic compatible</span><span class=pill>English &amp; 中文</span></p>
+
+<h2>Pick a model</h2>
+<p>Qwen3 (4B to 32B), Qwen3.6-35B-A3B, GLM-5.2, DeepSeek-V4-Flash and Laguna-S-2.1 — or bring your own <code>.gguf</code>. The table shows each one beside your hardware: its size, whether it runs fully resident on the GPU, streams routed experts from the SSD, or splits across CPU and GPU, and the prefill and decode speeds measured on Macs like yours. You see what fits before you download anything.</p>
+<p>Downloads run from the publisher (Hugging Face) and every file is checked against a bundled SHA-256 manifest; a model with no known-good hash on record is marked unverified and, in the default safe mode, will not be launched.</p>
+
+<h2>Try it, then measure it</h2>
+<p>The Playground runs a built-in ~3,000-token prompt or a short chat and reports prefill, decode, time-to-first-token and totals, with a live view of memory, GPU and disk. On an M1 Ultra, Qwen3.6-35B-A3B serves at about <b>1,118 tok/s prefill and 74 tok/s decode</b>, first token in 2.5 s.</p>
+
+<h2>Use it from your coding agent</h2>
+<p>Claude Code, OpenCode and Codex are wired in one click: the app writes an isolated launcher that points each tool at your local server, leaving your own configuration untouched, and hands you the Terminal command to start it. Open Cowork is a GUI app, so it is pointed at this Mac in its own settings. Agents share one model and one GPU worker, so requests are served one at a time.</p>
+<p>Anything else that speaks OpenAI or Anthropic can use the same endpoint at <code>http://127.0.0.1:8000/v1</code>, on this Mac only or across your LAN, your choice.</p>
+
+<h2>Private because it cannot be otherwise</h2>
+<p>The inference engine — the component that reads your prompts, conversations and files — is code-signed <b>without</b> the outbound-network entitlement, so macOS refuses it any internet connection at all. You can check that yourself with <code>codesign</code>. Nothing is uploaded unless you opt in, item by item, to sharing anonymous speed measurements or a reviewed list of your own preferences. See the <a href="./privacy.html">Privacy Policy</a>.</p>
+
+<h2>Requirements</h2>
+<p>An Apple Silicon Mac, and free disk space for the model you choose — a couple of GB for the small ones, up to ~217 GB for the largest. More unified memory runs larger, higher-quality models; the app tells you which ones your Mac can actually hold.</p>
 <footer>© 2026 Yijun Yu · <a href="mailto:yijun.yu@gmail.com">yijun.yu@gmail.com</a></footer>
