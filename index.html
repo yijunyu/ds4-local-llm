@@ -9,6 +9,9 @@
 <p>Qwen3 (4B to 32B), Qwen3.6-35B-A3B, GLM-5.2, DeepSeek-V4-Flash and Laguna-S-2.1 — or bring your own <code>.gguf</code>. The table shows each one beside your hardware: its size, whether it runs fully resident on the GPU, streams routed experts from the SSD, or splits across CPU and GPU, and the prefill and decode speeds measured on Macs like yours. You see what fits before you download anything.</p>
 <p>Downloads run from the publisher (Hugging Face) and every file is checked against a bundled SHA-256 manifest; a model with no known-good hash on record is marked unverified and, in the default safe mode, will not be launched.</p>
 
+<h2>AMD gfx1151 Performance</h2>
+<p>MiniCPM-V 4.7 35B-A3B runs on AMD Strix Halo (gfx1151) with 128K context. Decode throughput is <b>60.3–61.0 tok/s</b>, with 70K-token prompt recall in 141.6s and cached follow-up in 0.757s. See the full <a href="minicpm-v4.7-35b-a3b-gfx1151.md">AMD performance report</a>.</p>
+
 <h2>Try it, then measure it</h2>
 <p>The Playground runs a built-in ~3,000-token prompt or a short chat and reports prefill, decode, time-to-first-token and totals, with a live view of memory, GPU and disk. On an M1 Ultra, Qwen3.6-35B-A3B serves at about <b>1,118 tok/s prefill and 74 tok/s decode</b>, first token in 2.5 s.</p>
 
