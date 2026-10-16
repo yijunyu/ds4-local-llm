@@ -1,27 +1,798 @@
-<!doctype html><meta charset=utf-8><title>Local Mind — Private On-Device AI for Mac</title><style>:root{--fg:#111;--mut:#666;--ac:#0a5}*{box-sizing:border-box}body{max-width:46rem;margin:0 auto;padding:3rem 1.2rem;font:16px/1.65 -apple-system,system-ui,Segoe UI,sans-serif;color:var(--fg)}h1{font-size:2rem;margin:.2rem 0}h2{margin-top:2rem}.tag{color:var(--mut);font-size:1.1rem}nav{margin:1.5rem 0;font-size:.95rem}nav a{margin-right:1rem;color:var(--ac);text-decoration:none}a{color:var(--ac)}.pill{display:inline-block;background:#eef;border-radius:1rem;padding:.15rem .7rem;margin:.2rem .3rem .2rem 0;font-size:.9rem}footer{margin-top:3rem;color:var(--mut);font-size:.85rem;border-top:1px solid #eee;padding-top:1rem}pre{white-space:pre-wrap}</style>
-<h1>Local Mind</h1>
-<p class=tag>Open-source language models, and the coding agents that use them, running entirely on your Mac. No cloud. No account. No API key.</p>
-<nav><a href="./privacy.html">Privacy</a><a href="./support.html">Support</a></nav>
-<p>Local Mind picks a model that actually fits your Apple Silicon Mac, serves it locally, and points your existing coding agents at it. Your prompts, your code, and your files stay on the machine.</p>
-<p><span class=pill>Private by default</span><span class=pill>Offline-capable</span><span class=pill>Pay once</span><span class=pill>Auto-fits your Mac</span><span class=pill>OpenAI &amp; Anthropic compatible</span><span class=pill>English &amp; 中文</span></p>
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Local Mind — every option, on one page</title>
+<meta name="description" content="Local Mind for Private AI — large models run on the Machine in front of you. The model, engine, residency and surface choices, laid out on one page.">
+<style>
+  html{color-scheme:light dark}
+  body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}
+  img{max-width:100%}
 
-<h2>Pick a model</h2>
-<p>Qwen3 (4B to 32B), Qwen3.6-35B-A3B, GLM-5.2, DeepSeek-V4-Flash and Laguna-S-2.1 — or bring your own <code>.gguf</code>. The table shows each one beside your hardware: its size, whether it runs fully resident on the GPU, streams routed experts from the SSD, or splits across CPU and GPU, and the prefill and decode speeds measured on Macs like yours. You see what fits before you download anything.</p>
-<p>Downloads run from the publisher (Hugging Face) and every file is checked against a bundled SHA-256 manifest; a model with no known-good hash on record is marked unverified and, in the default safe mode, will not be launched.</p>
+  :root {
+    --ground:#E9ECEA; --panel:#F5F8F6; --panel-2:#DFE4E1;
+    --ink:#0F1412; --ink-2:#4C554F; --ink-3:#77817A;
+    --rule:#C6CEC8; --rule-2:#AEB8B1;
+    --resident:#0B8E83; --stream:#B54B24; --hybrid:#966D12;
+    --resident-bg:#D6ECE9; --stream-bg:#F4DED5; --hybrid-bg:#F0E6CC;
+    --display:ui-serif,"New York","Iowan Old Style",Georgia,serif;
+    --body:-apple-system,BlinkMacSystemFont,"SF Pro Text","Helvetica Neue",sans-serif;
+    --mono:ui-monospace,"SF Mono",Menlo,monospace;
+    --step:clamp(.72rem,.68rem + .2vw,.8rem);
+  }
+  @media (prefers-color-scheme:dark){
+    :root{
+      --ground:#0C100E; --panel:#141917; --panel-2:#1D2422;
+      --ink:#E9EEEB; --ink-2:#97A19A; --ink-3:#6E7871;
+      --rule:#242C28; --rule-2:#333C37;
+      --resident:#2FD3C3; --stream:#F0794A; --hybrid:#E0AC34;
+      --resident-bg:#0E2B29; --stream-bg:#2E1710; --hybrid-bg:#2A2109;
+    }
+  }
+  body{background:var(--ground);color:var(--ink);font-family:var(--body);
+       line-height:1.55;-webkit-font-smoothing:antialiased;}
+  .wrap{max-width:1120px;margin:0 auto;padding:clamp(1.5rem,4vw,4rem) clamp(1rem,3vw,2rem) 4rem;
+        display:flex;flex-direction:column;gap:clamp(2.5rem,5vw,4rem);}
+  h1,h2,h3{text-wrap:balance;margin:0;}
+  p{margin:0;}
+  a{color:inherit;}
+  :focus-visible{outline:2px solid var(--resident);outline-offset:3px;border-radius:2px;}
 
-<h2>AMD gfx1151 Performance</h2>
-<p>MiniCPM-V 4.7 35B-A3B runs on AMD Strix Halo (gfx1151) with 128K context. Decode throughput is <b>60.3–61.0 tok/s</b>, with 70K-token prompt recall in 141.6s and cached follow-up in 0.757s. See the full <a href="minicpm-v4.7-35b-a3b-gfx1151.md">AMD performance report</a>.</p>
+  .eyebrow{font-family:var(--mono);font-size:var(--step);letter-spacing:.14em;
+           text-transform:uppercase;color:var(--ink-3);}
 
-<h2>Try it, then measure it</h2>
-<p>The Playground runs a built-in ~3,000-token prompt or a short chat and reports prefill, decode, time-to-first-token and totals, with a live view of memory, GPU and disk. On an M1 Ultra, Qwen3.6-35B-A3B serves at about <b>1,118 tok/s prefill and 74 tok/s decode</b>, first token in 2.5 s.</p>
+  .mast{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:clamp(1.5rem,4vw,3rem);
+        align-items:start;border-bottom:1px solid var(--rule);
+        padding-bottom:clamp(1.5rem,3vw,2.5rem);}
+  .mast-copy{display:flex;flex-direction:column;gap:1.15rem;min-width:0;}
+  @media (max-width:640px){ .mast{grid-template-columns:minmax(0,1fr);} }
+  .mast h1{font-family:var(--display);font-weight:500;letter-spacing:-.02em;
+           font-size:clamp(2.6rem,1.6rem + 4.4vw,5.2rem);line-height:.98;}
+  .mast .thesis{font-family:var(--display);font-size:clamp(1.1rem,.95rem + .7vw,1.6rem);
+                line-height:1.35;color:var(--ink-2);max-width:34ch;font-style:italic;}
 
-<h2>Use it from your coding agent</h2>
-<p>Claude Code, OpenCode and Codex are wired in one click: the app writes an isolated launcher that points each tool at your local server, leaving your own configuration untouched, and hands you the Terminal command to start it. Open Cowork is a GUI app, so it is pointed at this Mac in its own settings. Agents share one model and one GPU worker, so requests are served one at a time.</p>
-<p>Anything else that speaks OpenAI or Anthropic can use the same endpoint at <code>http://127.0.0.1:8000/v1</code>, on this Mac only or across your LAN, your choice.</p>
+  .flowscroll{overflow-x:auto;}
+  .flow{display:grid;grid-template-columns:repeat(4,minmax(215px,1fr));gap:.85rem;min-width:940px;}
+  .stage{background:var(--panel);border:1px solid var(--rule);border-radius:3px;
+         display:flex;flex-direction:column;}
+  .stage > .head{padding:.85rem 1rem .7rem;border-bottom:1px solid var(--rule);
+                 display:flex;flex-direction:column;gap:.15rem;}
+  .stage .n{font-family:var(--mono);font-size:.66rem;letter-spacing:.16em;color:var(--ink-3);}
+  .stage .t{font-family:var(--display);font-size:1.22rem;line-height:1.2;}
+  .stage .sub{font-size:.8rem;color:var(--ink-2);line-height:1.4;}
+  .opts{list-style:none;margin:0;padding:.6rem;display:flex;flex-direction:column;gap:.28rem;}
+  .opts li{display:flex;flex-direction:column;gap:.1rem;padding:.5rem .6rem;
+           border-radius:2px;background:var(--panel-2);}
+  .opts .o{font-size:.9rem;font-weight:590;letter-spacing:-.005em;}
+  .opts .d{font-size:.76rem;color:var(--ink-2);line-height:1.4;}
+  .opts .tag{font-family:var(--mono);font-size:.64rem;letter-spacing:.1em;
+             text-transform:uppercase;color:var(--ink-3);}
+  /* A release is only legible if the delta is marked where the choice is made,
+     not only summarised at the top. */
+  .nu{font-family:var(--mono);font-size:.6rem;letter-spacing:.12em;
+      text-transform:uppercase;color:var(--resident);border:1px solid var(--resident);
+      border-radius:2px;padding:0 .28rem;margin-left:.4rem;vertical-align:.08em;}
+  .pd{font-family:var(--mono);font-size:.6rem;letter-spacing:.12em;
+      text-transform:uppercase;color:var(--hybrid);border:1px solid var(--hybrid);
+      border-radius:2px;padding:0 .28rem;margin-left:.4rem;vertical-align:.08em;}
+  .newband{border-top:1px solid var(--rule);border-bottom:1px solid var(--rule);
+           padding:clamp(1.25rem,3vw,2rem) 0;}
+  .newband h2{font-size:clamp(1.3rem,1.1rem + .8vw,1.7rem);}
+  .newband .duo{margin-top:1rem;}
+  .newband .panel h3{font-size:1.05rem;}
+  .newband .panel h3 .nu{margin-left:.45rem;}
 
-<h2>Private because it cannot be otherwise</h2>
-<p>The inference engine — the component that reads your prompts, conversations and files — is code-signed <b>without</b> the outbound-network entitlement, so macOS refuses it any internet connection at all. You can check that yourself with <code>codesign</code>. Nothing is uploaded unless you opt in, item by item, to sharing anonymous speed measurements or a reviewed list of your own preferences. See the <a href="./privacy.html">Privacy Policy</a>.</p>
+  li.res-gpu{background:var(--resident-bg);box-shadow:inset 3px 0 0 var(--resident);}
+  li.res-ssd{background:var(--stream-bg);box-shadow:inset 3px 0 0 var(--stream);}
+  li.res-hyb{background:var(--hybrid-bg);box-shadow:inset 3px 0 0 var(--hybrid);}
+  li.res-gpu .o{color:var(--resident);} li.res-ssd .o{color:var(--stream);} li.res-hyb .o{color:var(--hybrid);}
 
-<h2>Requirements</h2>
-<p>An Apple Silicon Mac, and free disk space for the model you choose — a couple of GB for the small ones, up to ~217 GB for the largest. More unified memory runs larger, higher-quality models; the app tells you which ones your Mac can actually hold.</p>
-<footer>© 2026 Yijun Yu · <a href="mailto:yijun.yu@gmail.com">yijun.yu@gmail.com</a></footer>
+  .sec{display:flex;flex-direction:column;gap:1.25rem;}
+  .sec h2{font-family:var(--display);font-weight:500;letter-spacing:-.015em;
+            font-size:clamp(1.5rem,1.2rem + 1vw,2.1rem);line-height:1.15;}
+  .lede{color:var(--ink-2);max-width:66ch;font-size:.98rem;}
+  .note{color:var(--ink-2);font-size:.98rem;}
+  .note strong{color:var(--ink);font-weight:600;}
+
+  .tabrow{display:flex;flex-wrap:wrap;align-items:baseline;gap:.4rem .9rem;
+          justify-content:space-between;}
+  /* The tabs take the whole first line, so the price and the bind note always
+     wrap below them. Without this the row is space-between across all three,
+     and whichever price happens to be SHORT enough to still fit -- the M4 mini
+     is the shortest -- gets stranded between the tabs and the bind note
+     instead of sitting under the machine it belongs to. */
+  .tabs{display:flex;flex-wrap:wrap;gap:.35rem;flex:1 1 100%;}
+  .tabs button{font-family:var(--mono);font-size:var(--step);letter-spacing:.06em;
+               color:var(--ink-2);background:var(--panel);cursor:pointer;
+               border:1px solid var(--rule);border-radius:2px;padding:.42rem .7rem;
+               line-height:1.3;}
+  .tabs button:hover{border-color:var(--rule-2);color:var(--ink);}
+  .tabs button[aria-selected="true"]{background:var(--ink);color:var(--ground);
+                                     border-color:var(--ink);}
+  .bindnote{font-family:var(--mono);font-size:var(--step);color:var(--ink-3);}
+  /* What the machine costs, beside what it does — a rate means little without it. */
+  .price{font-family:var(--mono);font-size:var(--step);color:var(--ink-2);
+         letter-spacing:.04em;white-space:nowrap;}
+  .na{color:var(--ink-3);}
+
+  .tscroll{overflow-x:auto;border:1px solid var(--rule);border-radius:3px;background:var(--panel);}
+  table{border-collapse:collapse;width:100%;min-width:620px;font-size:.88rem;}
+  th,td{text-align:left;padding:.62rem .9rem;border-bottom:1px solid var(--rule);}
+  thead th{font-family:var(--mono);font-size:.66rem;letter-spacing:.13em;text-transform:uppercase;
+           color:var(--ink-3);font-weight:400;background:var(--panel-2);}
+  /* Sortable headers. The button carries the padding so the whole cell is the
+     hit target, and it is a real <button> so keyboard and screen readers get
+     the behaviour for free; aria-sort on the th is what actually announces it. */
+  thead th.sortable{padding:0;}
+  thead th.sortable .sortbtn{font:inherit;letter-spacing:inherit;text-transform:inherit;
+           color:inherit;background:none;border:0;width:100%;text-align:left;
+           padding:.62rem .9rem;cursor:pointer;display:flex;align-items:center;gap:.4rem;}
+  thead th.sortable .sortbtn:hover{color:var(--ink);background:var(--rule);}
+  thead th.sortable .sortbtn:focus-visible{outline:2px solid var(--resident);outline-offset:-2px;}
+  thead th[aria-sort="ascending"] .sortbtn,
+  thead th[aria-sort="descending"] .sortbtn{color:var(--ink);}
+  /* The arrow occupies its slot even when inactive, so nothing shifts on click. */
+  .sarrow{font-size:.85em;line-height:1;opacity:0;}
+  th[aria-sort="ascending"] .sarrow,th[aria-sort="descending"] .sarrow{opacity:1;}
+  th[aria-sort="ascending"] .sarrow::after{content:"\2191";}
+  th[aria-sort="descending"] .sarrow::after{content:"\2193";}
+  th[aria-sort="none"] .sarrow::after{content:"\2195";}
+  thead th.sortable .sortbtn:hover .sarrow{opacity:.45;}
+  tbody tr:last-child td{border-bottom:0;}
+  td.num{font-family:var(--mono);font-variant-numeric:tabular-nums;white-space:nowrap;}
+  td.fam{font-weight:590;}
+  td .variant{color:var(--ink-2);font-weight:400;}
+  .pill{display:inline-block;font-family:var(--mono);font-size:.66rem;letter-spacing:.08em;
+        text-transform:uppercase;padding:.16rem .45rem;border-radius:2px;white-space:nowrap;}
+  .p-gpu{background:var(--resident-bg);color:var(--resident);}
+  .p-ssd{background:var(--stream-bg);color:var(--stream);}
+  .p-hyb{background:var(--hybrid-bg);color:var(--hybrid);}
+
+  .duo{display:grid;grid-template-columns:repeat(auto-fit,minmax(228px,1fr));gap:.85rem;}
+  .panel{background:var(--panel);border:1px solid var(--rule);border-radius:3px;
+         padding:1.15rem 1.25rem;display:flex;flex-direction:column;gap:.6rem;}
+  .panel h3{font-family:var(--display);font-weight:500;font-size:1.18rem;}
+  .panel p{font-size:.88rem;color:var(--ink-2);}
+  .panel ul{margin:0;padding-left:1.05rem;display:flex;flex-direction:column;gap:.3rem;
+            font-size:.88rem;color:var(--ink-2);}
+  code{font-family:var(--mono);font-size:.84em;background:var(--panel-2);
+       padding:.08rem .3rem;border-radius:2px;color:var(--ink);}
+
+  .mast-store{display:flex;flex-direction:column;gap:.3rem;align-items:flex-start;}
+  .qr{width:clamp(84px,9vw,104px);height:auto;display:block;
+      background:#FFF;padding:8px;border-radius:2px;border:1px solid var(--rule-2);
+      margin-bottom:.35rem;}
+  .qr path{fill:#000;}
+  .s-name{font-family:var(--display);font-size:1.02rem;line-height:1.25;max-width:16ch;}
+  .s-where{font-family:var(--mono);font-size:var(--step);letter-spacing:.1em;
+           text-transform:uppercase;color:var(--ink-3);}
+  .s-url{font-family:var(--mono);font-size:var(--step);color:var(--ink-3);}
+
+  /* Platform tabs. Two rows that gate each other: an OS choice disables the
+     accelerators it cannot run, rather than hiding them -- "not on this OS" is
+     information, and a tab that vanishes teaches the reader nothing. */
+  .platrow{display:flex;flex-wrap:wrap;align-items:center;gap:.3rem .5rem;}
+  .ptabs{display:flex;flex-wrap:wrap;gap:.25rem;}
+  .psep{color:var(--ink-3);}
+  .ptabs button{font-family:var(--mono);font-size:var(--step);letter-spacing:.1em;
+                text-transform:uppercase;cursor:pointer;color:var(--ink-3);
+                background:none;border:1px solid transparent;border-radius:2px;
+                padding:.18rem .42rem;line-height:1.3;}
+  .ptabs button:hover:not([aria-disabled="true"]){color:var(--ink);}
+  .ptabs button[aria-selected="true"]{color:var(--ink);border-color:var(--rule-2);
+                                      background:var(--panel);}
+  /* Disabled reads as unavailable, not as merely unselected. */
+  .ptabs button[aria-disabled="true"]{opacity:.32;cursor:not-allowed;
+                                      text-decoration:line-through;}
+  .postlist{margin:.5rem 0 0;font-family:var(--mono);font-size:.82rem;
+            display:flex;flex-wrap:wrap;gap:.3rem .6rem;}
+  .postlist a{color:var(--resident);text-decoration:none;}
+  .postlist a:hover{text-decoration:underline;}
+  .postlist .none{color:var(--ink-3);}
+
+  /* The Linux binaries, one key. A status chip per row because only some of
+     them are packaged yet, and a download link that 404s is worse than an
+     honest "not yet". */
+  .bins{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+        gap:.5rem;margin:.9rem 0 0;}
+  .bin{background:var(--panel-2);border-radius:2px;padding:.6rem .7rem;
+       display:flex;flex-direction:column;gap:.12rem;}
+  .bin .b-n{font-family:var(--mono);font-size:.82rem;color:var(--ink);}
+  .bin .b-d{font-size:.76rem;color:var(--ink-2);line-height:1.4;}
+  .b-s{font-family:var(--mono);font-size:.62rem;letter-spacing:.1em;
+       text-transform:uppercase;align-self:flex-start;border-radius:2px;
+       padding:.05rem .3rem;margin-top:.15rem;}
+  .b-yes{color:var(--resident);border:1px solid var(--resident);}
+  .b-no{color:var(--ink-3);border:1px solid var(--rule-2);}
+  .cmd{font-family:var(--mono);font-size:.78rem;background:var(--panel-2);
+       border:1px solid var(--rule);border-radius:2px;padding:.6rem .7rem;
+       overflow-x:auto;white-space:pre;margin:.7rem 0 0;color:var(--ink);}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+  <header class="mast">
+    <div class="mast-copy">
+      <div class="platrow">
+        <div class="ptabs" id="ostabs" role="tablist" aria-label="Operating system"></div>
+        <span class="psep">·</span>
+        <div class="ptabs" id="betabs" role="tablist" aria-label="Accelerator"></div>
+        <span class="eyebrow" style="margin-left:auto">1.0.9 · TestFlight · 1.0.8 on the Mac App Store</span>
+      </div>
+      <h1>Local&nbsp;Mind</h1>
+      <p class="thesis">Large models run on the Machine in front of you. Once a model is serving, the engine cannot open a network connection — the prompt has nowhere else to go. <strong>Hybrid Mind is the second use case:</strong> keep that engine and put a cloud API beside it, under one endpoint, with a priority between them — so a model you host and a model you rent answer the same agents, and you can always tell which one did.</p>
+      <p class="postlist" id="postlist"></p>
+    </div>
+    <aside class="mast-store">
+      <a href="https://apps.apple.com/app/id6793161102" aria-label="Local Mind for Private AI on the Mac App Store">
+      <svg class="qr" viewBox="0 0 33 33" role="img"
+           aria-label="QR code linking to Local Mind for Private AI on the Mac App Store">
+        <path d="M0 0h1v1h-1zM1 0h1v1h-1zM2 0h1v1h-1zM3 0h1v1h-1zM4 0h1v1h-1zM5 0h1v1h-1zM6 0h1v1h-1zM9 0h1v1h-1zM12 0h1v1h-1zM15 0h1v1h-1zM16 0h1v1h-1zM17 0h1v1h-1zM18 0h1v1h-1zM21 0h1v1h-1zM22 0h1v1h-1zM26 0h1v1h-1zM27 0h1v1h-1zM28 0h1v1h-1zM29 0h1v1h-1zM30 0h1v1h-1zM31 0h1v1h-1zM32 0h1v1h-1zM0 1h1v1h-1zM6 1h1v1h-1zM10 1h1v1h-1zM15 1h1v1h-1zM17 1h1v1h-1zM20 1h1v1h-1zM26 1h1v1h-1zM32 1h1v1h-1zM0 2h1v1h-1zM2 2h1v1h-1zM3 2h1v1h-1zM4 2h1v1h-1zM6 2h1v1h-1zM9 2h1v1h-1zM10 2h1v1h-1zM12 2h1v1h-1zM14 2h1v1h-1zM15 2h1v1h-1zM17 2h1v1h-1zM18 2h1v1h-1zM21 2h1v1h-1zM26 2h1v1h-1zM28 2h1v1h-1zM29 2h1v1h-1zM30 2h1v1h-1zM32 2h1v1h-1zM0 3h1v1h-1zM2 3h1v1h-1zM3 3h1v1h-1zM4 3h1v1h-1zM6 3h1v1h-1zM8 3h1v1h-1zM12 3h1v1h-1zM13 3h1v1h-1zM16 3h1v1h-1zM19 3h1v1h-1zM20 3h1v1h-1zM21 3h1v1h-1zM23 3h1v1h-1zM24 3h1v1h-1zM26 3h1v1h-1zM28 3h1v1h-1zM29 3h1v1h-1zM30 3h1v1h-1zM32 3h1v1h-1zM0 4h1v1h-1zM2 4h1v1h-1zM3 4h1v1h-1zM4 4h1v1h-1zM6 4h1v1h-1zM9 4h1v1h-1zM13 4h1v1h-1zM14 4h1v1h-1zM15 4h1v1h-1zM18 4h1v1h-1zM20 4h1v1h-1zM21 4h1v1h-1zM24 4h1v1h-1zM26 4h1v1h-1zM28 4h1v1h-1zM29 4h1v1h-1zM30 4h1v1h-1zM32 4h1v1h-1zM0 5h1v1h-1zM6 5h1v1h-1zM8 5h1v1h-1zM12 5h1v1h-1zM13 5h1v1h-1zM14 5h1v1h-1zM15 5h1v1h-1zM18 5h1v1h-1zM20 5h1v1h-1zM24 5h1v1h-1zM26 5h1v1h-1zM32 5h1v1h-1zM0 6h1v1h-1zM1 6h1v1h-1zM2 6h1v1h-1zM3 6h1v1h-1zM4 6h1v1h-1zM5 6h1v1h-1zM6 6h1v1h-1zM8 6h1v1h-1zM10 6h1v1h-1zM12 6h1v1h-1zM14 6h1v1h-1zM16 6h1v1h-1zM18 6h1v1h-1zM20 6h1v1h-1zM22 6h1v1h-1zM24 6h1v1h-1zM26 6h1v1h-1zM27 6h1v1h-1zM28 6h1v1h-1zM29 6h1v1h-1zM30 6h1v1h-1zM31 6h1v1h-1zM32 6h1v1h-1zM8 7h1v1h-1zM10 7h1v1h-1zM13 7h1v1h-1zM16 7h1v1h-1zM18 7h1v1h-1zM22 7h1v1h-1zM1 8h1v1h-1zM2 8h1v1h-1zM6 8h1v1h-1zM9 8h1v1h-1zM10 8h1v1h-1zM13 8h1v1h-1zM14 8h1v1h-1zM16 8h1v1h-1zM18 8h1v1h-1zM19 8h1v1h-1zM20 8h1v1h-1zM23 8h1v1h-1zM24 8h1v1h-1zM26 8h1v1h-1zM27 8h1v1h-1zM29 8h1v1h-1zM0 9h1v1h-1zM2 9h1v1h-1zM5 9h1v1h-1zM7 9h1v1h-1zM8 9h1v1h-1zM10 9h1v1h-1zM13 9h1v1h-1zM16 9h1v1h-1zM19 9h1v1h-1zM20 9h1v1h-1zM22 9h1v1h-1zM23 9h1v1h-1zM26 9h1v1h-1zM29 9h1v1h-1zM31 9h1v1h-1zM32 9h1v1h-1zM0 10h1v1h-1zM6 10h1v1h-1zM8 10h1v1h-1zM9 10h1v1h-1zM10 10h1v1h-1zM11 10h1v1h-1zM13 10h1v1h-1zM14 10h1v1h-1zM16 10h1v1h-1zM17 10h1v1h-1zM18 10h1v1h-1zM19 10h1v1h-1zM21 10h1v1h-1zM22 10h1v1h-1zM23 10h1v1h-1zM26 10h1v1h-1zM29 10h1v1h-1zM30 10h1v1h-1zM32 10h1v1h-1zM0 11h1v1h-1zM1 11h1v1h-1zM3 11h1v1h-1zM4 11h1v1h-1zM5 11h1v1h-1zM7 11h1v1h-1zM9 11h1v1h-1zM10 11h1v1h-1zM11 11h1v1h-1zM12 11h1v1h-1zM13 11h1v1h-1zM19 11h1v1h-1zM23 11h1v1h-1zM25 11h1v1h-1zM26 11h1v1h-1zM27 11h1v1h-1zM28 11h1v1h-1zM29 11h1v1h-1zM0 12h1v1h-1zM2 12h1v1h-1zM3 12h1v1h-1zM5 12h1v1h-1zM6 12h1v1h-1zM7 12h1v1h-1zM8 12h1v1h-1zM9 12h1v1h-1zM10 12h1v1h-1zM12 12h1v1h-1zM16 12h1v1h-1zM17 12h1v1h-1zM18 12h1v1h-1zM19 12h1v1h-1zM22 12h1v1h-1zM23 12h1v1h-1zM25 12h1v1h-1zM26 12h1v1h-1zM31 12h1v1h-1zM32 12h1v1h-1zM1 13h1v1h-1zM7 13h1v1h-1zM10 13h1v1h-1zM13 13h1v1h-1zM14 13h1v1h-1zM15 13h1v1h-1zM17 13h1v1h-1zM19 13h1v1h-1zM22 13h1v1h-1zM23 13h1v1h-1zM25 13h1v1h-1zM26 13h1v1h-1zM31 13h1v1h-1zM32 13h1v1h-1zM0 14h1v1h-1zM3 14h1v1h-1zM5 14h1v1h-1zM6 14h1v1h-1zM7 14h1v1h-1zM9 14h1v1h-1zM11 14h1v1h-1zM12 14h1v1h-1zM14 14h1v1h-1zM16 14h1v1h-1zM17 14h1v1h-1zM18 14h1v1h-1zM19 14h1v1h-1zM21 14h1v1h-1zM22 14h1v1h-1zM23 14h1v1h-1zM24 14h1v1h-1zM27 14h1v1h-1zM29 14h1v1h-1zM30 14h1v1h-1zM32 14h1v1h-1zM0 15h1v1h-1zM3 15h1v1h-1zM4 15h1v1h-1zM8 15h1v1h-1zM9 15h1v1h-1zM11 15h1v1h-1zM12 15h1v1h-1zM14 15h1v1h-1zM17 15h1v1h-1zM20 15h1v1h-1zM23 15h1v1h-1zM24 15h1v1h-1zM25 15h1v1h-1zM26 15h1v1h-1zM27 15h1v1h-1zM0 16h1v1h-1zM6 16h1v1h-1zM9 16h1v1h-1zM11 16h1v1h-1zM13 16h1v1h-1zM16 16h1v1h-1zM17 16h1v1h-1zM18 16h1v1h-1zM20 16h1v1h-1zM23 16h1v1h-1zM26 16h1v1h-1zM27 16h1v1h-1zM29 16h1v1h-1zM31 16h1v1h-1zM0 17h1v1h-1zM2 17h1v1h-1zM3 17h1v1h-1zM5 17h1v1h-1zM7 17h1v1h-1zM11 17h1v1h-1zM12 17h1v1h-1zM14 17h1v1h-1zM17 17h1v1h-1zM19 17h1v1h-1zM20 17h1v1h-1zM22 17h1v1h-1zM23 17h1v1h-1zM24 17h1v1h-1zM26 17h1v1h-1zM29 17h1v1h-1zM31 17h1v1h-1zM32 17h1v1h-1zM0 18h1v1h-1zM1 18h1v1h-1zM3 18h1v1h-1zM5 18h1v1h-1zM6 18h1v1h-1zM7 18h1v1h-1zM9 18h1v1h-1zM10 18h1v1h-1zM11 18h1v1h-1zM12 18h1v1h-1zM13 18h1v1h-1zM15 18h1v1h-1zM16 18h1v1h-1zM17 18h1v1h-1zM18 18h1v1h-1zM19 18h1v1h-1zM20 18h1v1h-1zM22 18h1v1h-1zM23 18h1v1h-1zM24 18h1v1h-1zM25 18h1v1h-1zM27 18h1v1h-1zM29 18h1v1h-1zM30 18h1v1h-1zM32 18h1v1h-1zM0 19h1v1h-1zM1 19h1v1h-1zM10 19h1v1h-1zM11 19h1v1h-1zM12 19h1v1h-1zM14 19h1v1h-1zM15 19h1v1h-1zM19 19h1v1h-1zM20 19h1v1h-1zM25 19h1v1h-1zM28 19h1v1h-1zM29 19h1v1h-1zM31 19h1v1h-1zM1 20h1v1h-1zM5 20h1v1h-1zM6 20h1v1h-1zM7 20h1v1h-1zM8 20h1v1h-1zM9 20h1v1h-1zM13 20h1v1h-1zM15 20h1v1h-1zM16 20h1v1h-1zM22 20h1v1h-1zM23 20h1v1h-1zM25 20h1v1h-1zM26 20h1v1h-1zM31 20h1v1h-1zM32 20h1v1h-1zM1 21h1v1h-1zM3 21h1v1h-1zM5 21h1v1h-1zM7 21h1v1h-1zM9 21h1v1h-1zM10 21h1v1h-1zM12 21h1v1h-1zM15 21h1v1h-1zM16 21h1v1h-1zM17 21h1v1h-1zM18 21h1v1h-1zM19 21h1v1h-1zM22 21h1v1h-1zM23 21h1v1h-1zM25 21h1v1h-1zM26 21h1v1h-1zM29 21h1v1h-1zM30 21h1v1h-1zM32 21h1v1h-1zM0 22h1v1h-1zM1 22h1v1h-1zM5 22h1v1h-1zM6 22h1v1h-1zM8 22h1v1h-1zM9 22h1v1h-1zM11 22h1v1h-1zM12 22h1v1h-1zM14 22h1v1h-1zM15 22h1v1h-1zM17 22h1v1h-1zM18 22h1v1h-1zM19 22h1v1h-1zM20 22h1v1h-1zM21 22h1v1h-1zM22 22h1v1h-1zM23 22h1v1h-1zM25 22h1v1h-1zM26 22h1v1h-1zM27 22h1v1h-1zM28 22h1v1h-1zM32 22h1v1h-1zM2 23h1v1h-1zM3 23h1v1h-1zM4 23h1v1h-1zM7 23h1v1h-1zM9 23h1v1h-1zM10 23h1v1h-1zM11 23h1v1h-1zM12 23h1v1h-1zM13 23h1v1h-1zM15 23h1v1h-1zM17 23h1v1h-1zM18 23h1v1h-1zM20 23h1v1h-1zM25 23h1v1h-1zM27 23h1v1h-1zM29 23h1v1h-1zM31 23h1v1h-1zM0 24h1v1h-1zM1 24h1v1h-1zM2 24h1v1h-1zM4 24h1v1h-1zM5 24h1v1h-1zM6 24h1v1h-1zM7 24h1v1h-1zM9 24h1v1h-1zM13 24h1v1h-1zM15 24h1v1h-1zM17 24h1v1h-1zM18 24h1v1h-1zM19 24h1v1h-1zM20 24h1v1h-1zM23 24h1v1h-1zM24 24h1v1h-1zM25 24h1v1h-1zM26 24h1v1h-1zM27 24h1v1h-1zM28 24h1v1h-1zM29 24h1v1h-1zM8 25h1v1h-1zM11 25h1v1h-1zM12 25h1v1h-1zM13 25h1v1h-1zM15 25h1v1h-1zM19 25h1v1h-1zM21 25h1v1h-1zM23 25h1v1h-1zM24 25h1v1h-1zM28 25h1v1h-1zM32 25h1v1h-1zM0 26h1v1h-1zM1 26h1v1h-1zM2 26h1v1h-1zM3 26h1v1h-1zM4 26h1v1h-1zM5 26h1v1h-1zM6 26h1v1h-1zM9 26h1v1h-1zM11 26h1v1h-1zM12 26h1v1h-1zM14 26h1v1h-1zM16 26h1v1h-1zM17 26h1v1h-1zM18 26h1v1h-1zM19 26h1v1h-1zM24 26h1v1h-1zM26 26h1v1h-1zM28 26h1v1h-1zM29 26h1v1h-1zM30 26h1v1h-1zM32 26h1v1h-1zM0 27h1v1h-1zM6 27h1v1h-1zM9 27h1v1h-1zM13 27h1v1h-1zM14 27h1v1h-1zM15 27h1v1h-1zM18 27h1v1h-1zM20 27h1v1h-1zM22 27h1v1h-1zM23 27h1v1h-1zM24 27h1v1h-1zM28 27h1v1h-1zM29 27h1v1h-1zM31 27h1v1h-1zM32 27h1v1h-1zM0 28h1v1h-1zM2 28h1v1h-1zM3 28h1v1h-1zM4 28h1v1h-1zM6 28h1v1h-1zM10 28h1v1h-1zM12 28h1v1h-1zM13 28h1v1h-1zM14 28h1v1h-1zM18 28h1v1h-1zM19 28h1v1h-1zM23 28h1v1h-1zM24 28h1v1h-1zM25 28h1v1h-1zM26 28h1v1h-1zM27 28h1v1h-1zM28 28h1v1h-1zM0 29h1v1h-1zM2 29h1v1h-1zM3 29h1v1h-1zM4 29h1v1h-1zM6 29h1v1h-1zM9 29h1v1h-1zM11 29h1v1h-1zM13 29h1v1h-1zM14 29h1v1h-1zM16 29h1v1h-1zM18 29h1v1h-1zM19 29h1v1h-1zM20 29h1v1h-1zM21 29h1v1h-1zM25 29h1v1h-1zM27 29h1v1h-1zM28 29h1v1h-1zM30 29h1v1h-1zM32 29h1v1h-1zM0 30h1v1h-1zM2 30h1v1h-1zM3 30h1v1h-1zM4 30h1v1h-1zM6 30h1v1h-1zM8 30h1v1h-1zM10 30h1v1h-1zM13 30h1v1h-1zM15 30h1v1h-1zM19 30h1v1h-1zM21 30h1v1h-1zM23 30h1v1h-1zM24 30h1v1h-1zM27 30h1v1h-1zM28 30h1v1h-1zM30 30h1v1h-1zM31 30h1v1h-1zM32 30h1v1h-1zM0 31h1v1h-1zM6 31h1v1h-1zM8 31h1v1h-1zM9 31h1v1h-1zM10 31h1v1h-1zM15 31h1v1h-1zM16 31h1v1h-1zM18 31h1v1h-1zM20 31h1v1h-1zM23 31h1v1h-1zM24 31h1v1h-1zM27 31h1v1h-1zM28 31h1v1h-1zM29 31h1v1h-1zM0 32h1v1h-1zM1 32h1v1h-1zM2 32h1v1h-1zM3 32h1v1h-1zM4 32h1v1h-1zM5 32h1v1h-1zM6 32h1v1h-1zM9 32h1v1h-1zM10 32h1v1h-1zM11 32h1v1h-1zM13 32h1v1h-1zM14 32h1v1h-1zM18 32h1v1h-1zM20 32h1v1h-1zM23 32h1v1h-1zM24 32h1v1h-1zM27 32h1v1h-1zM28 32h1v1h-1zM29 32h1v1h-1zM32 32h1v1h-1z"/>
+      </svg>
+      </a>
+      <div class="s-name">Local Mind for Private AI</div>
+      <div class="s-where">Mac App Store</div>
+      <div class="s-url"><a href="https://apps.apple.com/app/id6793161102">apps.apple.com/app/id6793161102</a></div>
+    </aside>
+  </header>
+
+  <section class="sec newband">
+    <h2>New in 1.0.9</h2>
+    <p class="lede">MLX checkpoints in the picker, and Hybrid Mind. Version 1.0.9, build 77, is
+       uploaded and on <strong>TestFlight internal testing</strong>; the App&nbsp;Store version
+       record is prepared and no build is submitted for review yet, so
+       <strong>1.0.8 is still the released version</strong>. TestFlight is not the App&nbsp;Store,
+       and this band says so rather than implying otherwise.</p>
+    <div class="duo">
+      <div class="panel">
+        <h3>Serve MLX checkpoints, not only a single file</h3>
+        <p>Until now every model in the picker was one <code>.gguf</code>. Five catalogue models are also published as MLX checkpoints — a folder with a <code>config.json</code>, <code>safetensors</code> shards and a tokenizer — and the mlx engine reads that format. Where a model exists in both, the row carries a switch: GGUF runs on this app's own engines, MLX runs on <code>mlx-server</code>. The choice is remembered per model.</p>
+        <p>Each checkpoint is catalogued <em>per file</em>, with the publisher's own byte size and checksum, because a directory has no single artefact to verify. Nothing is fetched that the engine does not read — no model card, no licence text, no helper scripts — and an interrupted download resumes from the file it was missing.</p>
+      </div>
+      <div class="panel">
+        <h3>The five checkpoints, and whose records they are</h3>
+        <p>Gemma&nbsp;4&nbsp;26B&nbsp;A4B (15.6&nbsp;GB), Ternary Bonsai&nbsp;2&nbsp;27B (8.6&nbsp;GB), Qwen3.8-27B 4-bit MTP (16.1&nbsp;GB), Laguna&nbsp;XS&nbsp;2.1 NVFP4 (21.6&nbsp;GB) and Qwen3.8-Flash-Next 4-bit MTP (113.2&nbsp;GB, published by TensorFold).</p>
+        <p>These are the reference checkpoints the finished <strong>MLX.fast</strong> optimisation tracks pinned. Two tracks published records — 453.1% over a serial control for Bonsai&nbsp;2, 111% composite for Qwen3.8-Flash-Next — measured by that competition, on its hardware, against its own control. <strong>The winners were the submitted engines, not the models.</strong> What this release adds is a verified download and a way to serve the weights those engines were tuned against.</p>
+        <p>And it does <strong>not</strong> serve them with a winning engine, which was measured rather than assumed: the Bonsai&nbsp;2 track's winning tree, at the submission holding that record, decoded <strong>10.0&ndash;10.4&nbsp;tok/s</strong> against the stock MLX engine's <strong>30.7&ndash;35.3</strong> on the same checkpoint, three repetitions each, greedy, on an M1&nbsp;Ultra 128&nbsp;GB. Its advantage is speculative decoding driven by a pinned drafter the serving binary will not load, so what is reachable is the slower target-only path.</p>
+      </div>
+      <div class="panel">
+        <h3>Point at a model instead of fetching it</h3>
+        <p>“Browse…” now accepts a model folder as well as a <code>.gguf</code>, Spotlight finds MLX checkpoints already on this Mac and lists them as models, and a folder you choose is granted access once and remembered across launches.</p>
+        <p><strong>One new model.</strong> Gemma&nbsp;4&nbsp;26B&nbsp;A4B — 26B parameters, 4B active, QAT 4-bit, 15.6&nbsp;GB. It is catalogued as an MLX checkpoint only; there is no GGUF for it, and it carries an <em>unevaluated</em> badge because no speed figure has been measured for it here.</p>
+      </div>
+      <div class="panel">
+        <h3>Hybrid Mind — one endpoint, a local model and a cloud model</h3>
+        <p>The app fronts the local engine and a cloud API you configure on <strong>its own port</strong>, speaking all three request shapes, so Claude Code on <code>/v1/messages</code>, Codex on <code>/v1/responses</code> and opencode-style clients on <code>/v1/chat/completions</code> all get it without being reconfigured. A priority says which side to try first.</p>
+        <p>Off until you turn it on; it states that prompts will leave before the first enable; the engine keeps its own port, so anything already pointed there stays local-only; every reply is tagged with the side that answered, and both sides are counted. When the provider reports no remaining credit it says so <strong>once</strong> and goes local-only rather than asking again — turning the cloud back on retries, and will ask again if the account is still unfunded.</p>
+        <p>The engine itself is untouched and still network-locked: it holds no outbound entitlement, and the cloud call is made by the app, which needs network access for model downloads anyway. That asymmetry is why the engine's guarantee survives the feature.</p>
+      </div>
+      <div class="panel">
+        <h3>A local turn that an agent's preamble does not swamp</h3>
+        <p>The local service can compact an agent's fixed preamble before the model prefills it (off by default). Measured on a real captured Claude&nbsp;Code request with 23 tools, <strong>tool definitions were 64% of the body and the system prompt only 8%</strong> — the opposite of the obvious guess. Compacting tools first removed <strong>77% of the tool definitions and 52% of the whole prefilled context</strong>, about 24.7K approximate tokens down to 11.9K, while keeping every tool's name and required parameters: a clipped description makes a tool worse to choose, a missing name makes the call impossible to construct, and those are different kinds of damage.</p>
+        <p>It sits in the protocol parsers rather than one client's path, so all three shapes shrink — 85%, 87% and 85% on one deliberately bulky tool. What is <strong>not</strong> claimed is an end-to-end run with each agent: the ratios above come from one captured Claude&nbsp;Code request, and another agent's preamble has a different shape.</p>
+      </div>
+      <div class="panel">
+        <h3>Where MLX models run, and where they do not</h3>
+        <p>The MLX engine is a separate <code>mlx-server</code> binary installed beside the app's other engine files, and macOS does not let the Mac&nbsp;App&nbsp;Store build launch an app outside itself. <strong>MLX models therefore run in the Developer-ID build only</strong>, and the App&nbsp;Store build says so plainly rather than failing with an engine error. The GGUF version of every model above except Gemma&nbsp;4 runs in both builds.</p>
+        <p>Four of the five checkpoints were loaded and served through the app's engine path on an M1&nbsp;Ultra 128&nbsp;GB, answering with correct completions, their catalogued checksums checked against the bytes on disk. The fifth, the 113&nbsp;GB Qwen3.8-Flash-Next pack, was fetched in full and <strong>does not load on the bundled engine</strong>: it reaches 75.8&nbsp;GiB of weights and then trips a runtime precondition inside that architecture's embedding layer. Said plainly because the row is in the catalogue.</p>
+        <p>Served by a third-party MLX binary this app does not ship, the same pack decodes at <strong>26.4&nbsp;tok/s</strong> on this machine (median of three, 628-token prompt, 128 generated), against <strong>43.7</strong> for the GGUF form of the same model on the reference engine. That is a capacity result, not a verdict on the packaging: its per-layer embedding table was paged from SSD rather than resident, and whether its draft head engaged is unconfirmed — the binary logs no acceptance rate.</p>
+      </div>
+      <div class="panel">
+        <h3>512 fewer GPU dispatches a token, and the throughput goal now met</h3>
+        <p>A decode step of Ternary Bonsai&nbsp;2 issued <strong>1171 separate GPU dispatches</strong>; nine kernel pairs are now fused into one each, taking it to <strong>659</strong>, <strong>bit-identical</strong> &mdash; all 248320 logits match as bit patterns. On an M1&nbsp;Ultra 128&nbsp;GB, twelve interleaved whole-process runs (six fused, six not) measure <strong>+12.9%</strong> against this session's own control, and the fused rate, 33.46&nbsp;tok/s at a 256-token prompt, clears the 32.0 goal this work was aimed at. Still <strong>not in build&nbsp;77 or any shipped build</strong>.</p>
+      </div>
+    </div>
+    <p class="lede" style="margin-top:.85rem">
+      Earlier releases are kept in full: <a href="releases.html">1.0.8, 1.0.7, 1.0.6, 1.0.5, 1.0.4, 1.0.3 and 1.0.2</a>.
+    </p>
+  </section>
+
+  <section class="sec">
+    <div>
+      <h2>Every option, in the order you meet them</h2>
+      <p class="lede">Four decisions stand between a model file and a running assistant. The app makes each one explicitly, and tells you which choices your Machine can actually honour — a 594&nbsp;GB model is offered, flagged, and honestly priced rather than hidden.</p>
+    </div>
+
+    <div class="flowscroll">
+      <div class="flow">
+
+        <div class="stage">
+          <div class="head">
+            <span class="n">STAGE 01</span>
+            <span class="t">Model</span>
+            <span class="sub">Downloaded and SHA-256 verified before it will load. A GGUF file, or — new in 1.0.9 — an MLX checkpoint folder, verified file by file.</span>
+          </div>
+          <ul class="opts">
+            <li><span class="o">DeepSeek-V4-Flash</span><span class="d">267B MoE, three expert recipes</span></li>
+            <li><span class="o">DeepSeek-V4-Pro-0813<span class="nu">new</span></span><span class="d">1.6T MoE, 850 GB — out-of-core only</span></li>
+            <li><span class="o">Qwen3 · 3.6 · 3.8<span class="nu">new</span></span><span class="d">4B to 32B dense, a 35B-A3B MoE, and a 27B with 256K context</span></li>
+            <li><span class="o">Muse Glimmer 30B<span class="nu">new</span></span><span class="d">Meta, 30B dense in 17 GB</span></li>
+            <li><span class="o">MiniMax H3<span class="nu">new</span></span><span class="d">Text to video, with synchronised audio</span></li>
+            <li><span class="o">Laguna S / XS 2.1</span><span class="d">Poolside coding models, 110B and 33B</span></li>
+            <li><span class="o">GLM-5.3-Flash<span class="nu">new</span></span><span class="d">320B MoE, 18B active &mdash; the first GLM that fits in memory on a 128 GB Mac</span></li>
+            <li><span class="o">Qwen3.8-Flash-Next<span class="nu">new</span></span><span class="d">125B MoE, 6B active &mdash; hybrid linear and sparse attention</span></li>
+            <li><span class="o">DeepSeek-V4-Flash Vision-Exp<span class="nu">new</span></span><span class="d">Sees images &mdash; model plus its encoder, 81.6 GiB together</span></li>
+            <li><span class="o">DeepSeek-V4.1-Flash<span class="pd">purchase</span></span><span class="d">763B MoE, 366 GB &mdash; only ~152 GiB of it is weights</span></li>
+            <li><span class="o">Qwen3.8-Flash-Next MTP<span class="pd">purchase</span></span><span class="d">The same 125B, drafting several tokens at a time &mdash; 147 GB, ~45 GiB resident</span></li>
+            <li><span class="o">Gemma 4 26B A4B<span class="nu">new</span></span><span class="d">Google, 26B/4B active, QAT 4-bit &mdash; MLX checkpoint only, 15.6 GB</span></li>
+            <li><span class="o">Ternary Bonsai 2 27B<span class="nu">new</span></span><span class="d">1.75 bits per weight &mdash; 5.95 GB as GGUF, 8.6 GB as MLX</span></li>
+            <li><span class="o">Laguna XS 2.1 NVFP4<span class="nu">new</span></span><span class="d">The same 33B as an MLX checkpoint, 21.6 GB</span></li>
+            <li><span class="o">Kimi-K3</span><span class="d">~1500B, out-of-core only</span></li>
+            <li><span class="o">Bring your own</span><span class="d">Any GGUF on disk &mdash; or an MLX folder, browsed or found by Spotlight</span></li>
+          </ul>
+        </div>
+
+        <div class="stage">
+          <div class="head">
+            <span class="n">STAGE 02</span>
+            <span class="t">Engine</span>
+            <span class="sub">Which implementation executes the weights. Named, so a number is never misattributed.</span>
+          </div>
+          <ul class="opts">
+            <li><span class="tag">optimized</span><span class="o">Our Rust engine</span><span class="d">Hand-written Metal kernels, generated by our own compiler</span></li>
+            <li><span class="tag">reference</span><span class="o">antirez's C engine</span><span class="d">The upstream reference, for models it supports</span></li>
+            <li><span class="tag">llamacpp</span><span class="o">llama.cpp</span><span class="d">Third-party, linked in-process</span></li>
+            <li><span class="tag">llamacpp-ds4</span><span class="o">llama.cpp + ds4 kernels</span><span class="d">Upstream with our kernels substituted</span></li>
+            <li><span class="tag">mlx</span><span class="o">MLX (mlx.fast)<span class="nu">new</span></span><span class="d">Apple MLX &mdash; the only engine here that reads an MLX checkpoint folder. A separate local process behind this server, so Developer-ID builds only.</span></li>
+            <li><span class="tag">mlx-tensorfold</span><span class="o">MLX (TensorFold MTP)<span class="nu">new</span></span><span class="d">Specialised to one checkpoint, with its pinned draft head. Listed as unavailable until its build is installed, rather than quietly falling back to the stock one.</span></li>
+          </ul>
+        </div>
+
+        <div class="stage">
+          <div class="head">
+            <span class="n">STAGE 03</span>
+            <span class="t">Residency</span>
+            <span class="sub">Where the weights live. Decided by physics — size against memory and disk.</span>
+          </div>
+          <ul class="opts">
+            <li class="res-gpu"><span class="tag">pure</span><span class="o">GPU resident</span><span class="d">Whole model in unified memory. Fastest.</span></li>
+            <li class="res-ssd"><span class="tag">ssd</span><span class="o">SSD-stream</span><span class="d">Experts stream from disk. Runs models larger than RAM.</span></li>
+            <li class="res-hyb"><span class="tag">hybrid</span><span class="o">CPU + GPU</span><span class="d">Split across both. Last resort for the largest files.</span></li>
+          </ul>
+        </div>
+
+        <div class="stage">
+          <div class="head">
+            <span class="n">STAGE 04</span>
+            <span class="t">Surface</span>
+            <span class="sub">How you reach the running model.</span>
+          </div>
+          <ul class="opts">
+            <li><span class="o">Playground</span><span class="d">Prompt, streamed answer with thinking split out, and a speed report</span></li>
+            <li><span class="o">Generate Video<span class="nu">new</span></span><span class="d">A few seconds of video from a description, or from a first and last frame</span></li>
+            <li><span class="o">Local API</span><span class="d">Chat-completions and Anthropic wire formats, loopback by default</span></li>
+            <li><span class="o">AI agents</span><span class="d">Wire a coding agent to the local model in one click</span></li>
+            <li><span class="o">Serve others</span><span class="d">Opt in per session, API key required — off again at every launch</span></li>
+            <li><span class="o">Hybrid Mind<span class="nu">new</span></span><span class="d">A second port fronting the local engine and a cloud API, with a priority — off until you turn it on, and every reply says which side answered</span></li>
+          </ul>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <section class="sec">
+    <h2>What your Machine can run</h2>
+
+    <div class="tabrow">
+      <div class="tabs" role="tablist" aria-label="Machine"></div>
+      <span class="price" id="boxprice"></span>
+      <span class="bindnote">Engine binds 127.0.0.1:8000</span>
+    </div>
+
+    <div class="tscroll">
+      <table id="modeltable">
+        <thead>
+          <tr>
+            <th scope="col" class="sortable" data-sort="model"  aria-sort="none"><button type="button" class="sortbtn">Model<span class="sarrow" aria-hidden="true"></span></button></th>
+            <th scope="col" class="sortable" data-sort="size"   aria-sort="none"><button type="button" class="sortbtn">Size<span class="sarrow" aria-hidden="true"></span></button></th>
+            <th scope="col" class="sortable" data-sort="engine" aria-sort="none"><button type="button" class="sortbtn">Engine<span class="sarrow" aria-hidden="true"></span></button></th>
+            <th scope="col" class="sortable" data-sort="runs"   aria-sort="none"><button type="button" class="sortbtn">Runs as<span class="sarrow" aria-hidden="true"></span></button></th>
+            <th scope="col" class="sortable" data-sort="decode" aria-sort="none"><button type="button" class="sortbtn">Decode<span class="sarrow" aria-hidden="true"></span></button></th>
+          </tr>
+        </thead>
+        <tbody id="modelrows"></tbody>
+      </table>
+    </div>
+    <p class="note" id="tablenote"></p>
+  </section>
+
+  <section class="sec" id="linuxsec">
+    <!-- NO-JS FALLBACK ONLY. renderBins() replaces this from the BINS array (~line 539),
+         which is the source of truth; the section is also hidden unless the Linux tab is
+         chosen. Keep the two in step, or a reader with JS and a reader without get
+         different answers about what is downloadable. -->
+    <div class="bins">
+      <div class="bin"><span class="b-n">ds4-rs-amd</span>
+        <span class="b-d">AMD ROCm. A controller: it probes the hardware, plans the split and launches the ROCm engine. Measured on the Ryzen&nbsp;AI Max+&nbsp;395 row above. The only one of the three whose tarball also carries its licence and notice files.</span>
+        <span class="b-s b-yes">available · x86-64</span></div>
+      <div class="bin"><span class="b-n">ds4-rs-ascend</span>
+        <span class="b-d">Huawei Ascend NPU. The controller only — the tarball holds that one binary, not a standalone server.</span>
+        <span class="b-s b-yes">available · arm64</span></div>
+      <div class="bin"><span class="b-n">ds4-rs-cuda</span>
+        <span class="b-d">NVIDIA. The engine behind the GB10 row above, built for the Grace arm64 host that machine is.</span>
+        <span class="b-s b-yes">available · arm64</span></div>
+    </div>
+
+    <p class="note" style="margin-top:.9rem">One command. It detects the accelerator, fetches only the matching binary, checks it against a published SHA-256, and installs the key:</p>
+    <div class="cmd">curl -fsSL https://peria.ai/install | sh -s -- --key DS4-… --email you@example.com</div>
+    <p class="note" style="margin-top:.5rem">Without a key it installs and runs the unlicensed path, so you can try it before buying one.</p>
+
+    <p class="note" style="margin-top:.7rem">Piping a script into a shell asks you to trust what you cannot read, which is the opposite of everything else on this page. The same install, verifiable:</p>
+    <div class="cmd">curl -fsSLO https://peria.ai/install
+shasum -a 256 install    # must match the value published at peria.ai/install.sha256
+sh install --key DS4-… --email you@example.com</div>
+
+    <p class="note" style="margin-top:.9rem"><strong>One key, every binary.</strong> The licence carries an expiry and the address it was issued to, and nothing else — there is no per-binary entitlement, so a key bought for one accelerator works on the others as they ship. It is checked offline against a public key compiled into the binary: no network is consulted, so it works on an air-gapped machine, and it stops working the day after it expires without needing to phone home. Keys come from <a href="https://peria.ai">peria.ai</a>, emailed on purchase.</p>
+  </section>
+
+  <div class="duo">
+    <div class="panel">
+      <h3>The prompt cannot leave, unless a hybrid cloud/local API mode is turned on</h3>
+      <p>Enforced, not promised. Once the engine has loaded weights and bound its port, it asks the kernel to revoke its own networking — irreversibly, for the life of the process.</p>
+      <p><strong>The one exception, named rather than buried.</strong> A hybrid mode can put a cloud API beside the local engine, and a prompt the cloud side answers does leave this Mac. It is off until you turn it on, it says so before the first time, it runs on a different port from the engine — so anything already pointed at the engine stays local-only — and every reply records which side produced it. The engine itself stays locked either way: it is the app, not the engine, that can reach the network, which is why the engine's guarantee survives the exception.</p>
+      <p>Check it while it serves:</p>
+      <p><code>lsof -i -a -p &lt;pid&gt;</code></p>
+      <p><strong>1.0.3 adds one door, and it is locked by default.</strong> Serving others binds the LAN instead of loopback — so it needs a key you minted, it is refused without one, and it switches itself off again at the next launch. Nothing you do not turn on this session.</p>
+    </div>
+
+    <div class="panel">
+      <h3>Hybrid Mind — the second use case</h3>
+      <p>The first use case is everything above: your model, your Machine, nothing leaving. The second is <strong>one endpoint over two models</strong> — the local engine and a cloud API you choose — with a priority saying which to try first.</p>
+      <p>Why it is one feature and not two switches: the conversation <em>survives the move</em>. A priority alone gives you a second model. A priority plus a rolling summary plus a cooldown gives you one assistant that keeps working when the cloud rate-limits, runs out of credit, or cannot be reached — it falls back to the Machine and carries on.</p>
+      <p>It serves whichever protocol your agent speaks, so Claude Code, Codex, opencode and the rest all get it from the same port without being reconfigured.</p>
+      <p><strong>Off until you turn it on</strong>, on a different port from the engine, and every reply records which side produced it. When the cloud runs out of credit it tells you once and goes local-only rather than asking again.</p>
+    </div>
+
+    <div class="panel">
+      <h3>Agents on your Machine</h3>
+      <p>The app writes each agent's config and points it at the local engine.</p>
+      <ul>
+        <li>Claude Code</li>
+        <li>OpenCode</li>
+        <li>Open Cowork</li>
+        <li>DeepSeek Harness (<code>dsh</code>)<span class="nu">new</span></li>
+        <li>Grok Build<span class="nu">new</span></li>
+        <li>Or your own — name the binary and the wire format</li>
+      </ul>
+    </div>
+
+    <div class="panel">
+      <h3>Numbers you can check</h3>
+      <p>Every run reports time to first token, prefill and decode rate — beside the engine that produced them and the model actually served.</p>
+      <p>Two prompts: a short chat, and a ~3000-token passage that measures real prefill.</p>
+      <p>Rankings are links, not verdicts — 1.0.3 lets you add the leaderboard you trust beside the ones we shipped.</p>
+    </div>
+
+    <div class="panel">
+      <h3>Weights are verified</h3>
+      <p>Every download carries its expected SHA-256. A mismatch is refused rather than loaded, and a partial file is reported as incomplete instead of failing later as corruption.</p>
+    </div>
+  </div>
+
+  <section class="sec" id="thanks">
+    <div>
+      <h2>Built on other people's work — and our own, in the open</h2>
+      <p class="lede">Local Mind is a small amount of new code on top of a great deal of open source. Named because a benchmark is meaningless without saying whose code produced it, and because these projects are the reason any of this runs at all.</p>
+    </div>
+    <div class="duo">
+      <div class="panel">
+        <h3>Ours, open</h3>
+        <ul>
+          <li><strong><a href="https://github.com/yijunyu/jev-rs">jev-rs</a></strong> — our open-source Rust engine for typed local judgments: yes/no, choices and ordered scores. MIT OR Apache-2.0.</li>
+          <li><strong><a href="https://github.com/yijunyu/tile-rs">tile-rs</a></strong> — the compiler framework the app's own kernels come from. Kernels are written once in a Rust tile DSL and lowered through MLIR to 15 backends; the Metal kernels running your model on this machine are generated by it.</li>
+          <li><strong><a href="https://pu-rs.org">pu-rs.org</a></strong> — a ranking system for accelerator kernels, measuring execution time on real hardware rather than quoting peak FLOPS. <a href="https://github.com/purs-org/pu-rs.org">Source and submissions</a> are open, so a claim there can be re-run.</li>
+        </ul>
+      </div>
+      <div class="panel">
+        <h3>Also ours</h3>
+        <ul>
+          <li><strong><a href="https://github.com/peri-a-i/precc-cc">precc</a></strong> — predictive error correction for coding agents. Different problem, same habit: measure it, publish the number, let someone check.</li>
+        </ul>
+        <p>The inference engine itself is not open. The kernels it runs are generated by tooling that is, which is the part worth reading.</p>
+      </div>
+    </div>
+    <div class="duo">
+      <div class="panel">
+        <h3>Engines</h3>
+        <ul>
+          <li><strong>llama.cpp</strong> and <strong>ggml</strong> — Georgi Gerganov and contributors. Linked in-process as one of the selectable engines, and the origin of the GGUF format every model here is distributed in. MIT.</li>
+          <li><strong>ds4</strong> — Salvatore Sanfilippo (antirez). The upstream reference engine, shipped as the <code>reference</code> option and used as the correctness oracle our own kernels are checked against.</li>
+        </ul>
+      </div>
+      <div class="panel">
+        <h3>Compiler and runtime</h3>
+        <ul>
+          <li><strong>Rust</strong> — the engine, the server and the compiler backend are Rust. Apache-2.0 / MIT.</li>
+          <li><strong>LLVM</strong> and <strong>MLIR</strong> — our kernels are generated through an MLIR dialect before they become Metal, CUDA or AscendC. Apache-2.0 with LLVM exceptions.</li>
+          <li>Rust crates doing load-bearing work, notably <strong>ed25519-dalek</strong>, <strong>sha2</strong>, <strong>serde</strong> and <strong>serde_json</strong>.</li>
+        </ul>
+      </div>
+      <div class="panel">
+        <h3>Models</h3>
+        <ul>
+          <li><strong>DeepSeek-V4-Flash</strong> — DeepSeek</li>
+          <li><strong>DeepSeek-V4.1-Flash</strong> — DeepSeek, MIT</li>
+          <li><strong>GLM-5.3-Flash</strong> — Z.ai (Zhipu), MIT</li>
+          <li><strong>Qwen3</strong> and <strong>Qwen3.6</strong> — Alibaba, Apache-2.0</li>
+          <li><strong>Qwen3.8-Flash-Next</strong> — Alibaba, Qwen community licence</li>
+          <li><strong>Laguna S / XS 2.1</strong> — Poolside</li>
+          <li><strong>Kimi-K3</strong> — Moonshot AI</li>
+          <li><strong>Muse Glimmer 30B</strong> — Meta, Apache-2.0</li>
+          <li><strong>MiniMax H3</strong> — MiniMax</li>
+        </ul>
+        <p>Each carries its own licence, shown in the app before download.</p>
+      </div>
+      <div class="panel">
+        <h3>Distribution</h3>
+        <ul>
+          <li><strong>Hugging Face</strong> — where the weights come from, and the quantisers who publish them.</li>
+          <li>The community that produces the GGUF conversions and imatrix quantisations these models are usable at all on a desktop because of.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<script>
+  // Numbers live in machines.json, NOT here. Uploading a new copy of that file
+  // updates the page — no HTML edit, no redeploy. The trade is that the table
+  // needs one fetch to populate, so failure has to be visible rather than
+  // leaving an empty table that looks like "nothing runs".
+  const PILL = { gpu: ["p-gpu","GPU"], ssd: ["p-ssd","SSD"], hyb: ["p-hyb","CPU+GPU"] };
+  const rowsEl = document.getElementById("modelrows");
+  const noteEl = document.getElementById("tablenote");
+  const priceEl = document.getElementById("boxprice");
+  const tabsEl = document.querySelector(".tabs");
+  let BOXES = [];
+
+  // ---- column sorting -----------------------------------------------------
+  // Every column sorts on a PARSED value, never on the rendered text. Sorting
+  // "594.0 GB" and "2 GB" as strings puts the 594 first; sorting "8.5 tok/s"
+  // lexically puts it above "62.3". The rendered string stays the thing the
+  // reader sees, and the sort reads the number behind it.
+  const MODE_RANK = { gpu: 3, hyb: 2, ssd: 1 };
+
+  function sizeGB(v) {
+    const m = String(v || "").match(/([\d.]+)\s*(TB|GB|MB)?/i);
+    if (!m) return null;
+    const n = parseFloat(m[1]);
+    const u = (m[2] || "GB").toUpperCase();
+    return u === "TB" ? n * 1000 : u === "MB" ? n / 1000 : n;
+  }
+  function rateNum(v) {
+    if (!v) return null;                       // null decode = NOT MEASURED
+    const m = String(v).match(/[\d.]+/);
+    return m ? parseFloat(m[0]) : null;
+  }
+  // "Runs as" ranks by the BEST mode available, so fully resident sorts above
+  // streaming above does-not-fit — the order a reader means by "how well".
+  function runsRank(modes) {
+    return (modes && modes.length) ? Math.max(...modes.map(m => MODE_RANK[m] || 0)) : 0;
+  }
+
+  // dir is the direction the FIRST click on that column applies: names read
+  // A-Z, but rates and capability read best-first, which is what a reader
+  // wants to see when they reach for them.
+  const SORTS = {
+    model:  { first:  1, get: r => (r.name || "").toLowerCase() },
+    size:   { first:  1, get: r => sizeGB(r.size) },
+    runs:   { first: -1, get: r => runsRank(r.modes) },
+    decode: { first: -1, get: r => rateNum(r.decode) },
+  };
+  let sortCol = null, sortDir = 1, curBox = 0;
+
+  function sortRows(rows) {
+    if (!sortCol || !SORTS[sortCol]) return rows;
+    const get = SORTS[sortCol].get;
+    return rows.slice().sort((a, b) => {
+      const av = get(a), bv = get(b);
+      // An absent value is not a small one. "not measured" sinks to the bottom
+      // in BOTH directions rather than posing as 0 (slowest) or as the fastest
+      // when reversed — the distinction this table exists to keep.
+      const an = av === null || av === undefined || Number.isNaN(av);
+      const bn = bv === null || bv === undefined || Number.isNaN(bv);
+      if (an || bn) return an && bn ? 0 : an ? 1 : -1;
+      if (typeof av === "string") return sortDir * av.localeCompare(bv);
+      return sortDir * (av - bv);
+    });
+  }
+
+  function wireSortHeaders() {
+    document.querySelectorAll("#modeltable th.sortable").forEach(th => {
+      const col = th.dataset.sort;
+      th.querySelector(".sortbtn").addEventListener("click", () => {
+        sortDir = (sortCol === col) ? -sortDir : SORTS[col].first;
+        sortCol = col;
+        render(curBox);
+      });
+    });
+  }
+
+  function paintSortHeaders() {
+    document.querySelectorAll("#modeltable th.sortable").forEach(th => {
+      th.setAttribute("aria-sort",
+        th.dataset.sort !== sortCol ? "none" : sortDir === 1 ? "ascending" : "descending");
+    });
+  }
+
+  function render(i) {
+    curBox = i;
+    const shown = machinesFor(curOS, curBE);
+    const b = shown[i];
+    if (!b) {
+      // Supported, but nothing measured on it yet. Say which, rather than
+      // showing an empty table that reads as "runs nothing".
+      const be = BACKENDS.find(x => x.id === curBE);
+      paintSortHeaders();
+      rowsEl.innerHTML = `<tr><td colspan="4" class="na">no ${be ? be.label : ""} measurements published yet</td></tr>`;
+      priceEl.textContent = "";
+      noteEl.textContent = `Nothing has been measured on ${be ? be.label : "this backend"} yet. The backend is supported; the numbers are not published because they have not been taken.`;
+      return;
+    }
+    paintSortHeaders();
+    rowsEl.innerHTML = sortRows(b.rows).map(r => {
+      const runs = (r.modes && r.modes.length)
+        ? r.modes.map(m => `<span class="pill ${PILL[m][0]}">${PILL[m][1]}</span>`).join(" ")
+        : `<span class="na">does not fit</span>`;
+      // null decode means NOT MEASURED, which is a different claim from slow.
+      const d = r.decode ? r.decode : `<span class="na">not measured</span>`;
+      const eng = r.engine || 'llama.cpp';
+      return `<tr><td class="fam">${r.name} <span class="variant">${r.params}</span></td>`
+           + `<td class="num">${r.size}</td><td>${eng}</td><td>${runs}</td><td class="num">${d}</td></tr>`;
+    }).join("");
+    // A box with no recorded price says nothing rather than "$0" or "—".
+    priceEl.textContent = b.price ? `≈ ${b.price}` : "";
+    noteEl.innerHTML = (b.note || "")
+      + " Sizes are the real download; residency is computed from that size against this"
+      + " machine's memory and disk.";
+    [...tabsEl.children].forEach((t, n) => t.setAttribute("aria-selected", String(n === i)));
+  }
+
+  // ---- platform state -----------------------------------------------------
+  // Two axes. The OS gates the accelerators; the pair gates the machine tabs,
+  // the posts and the downloads. Everything below reads from one place so the
+  // three lists cannot drift out of step with the tabs.
+  const OSES = [
+    { id: "mac",   label: "macOS" },
+    { id: "linux", label: "Linux" },
+  ];
+  const BACKENDS = [
+    { id: "metal", label: "Metal",  os: "mac"   },
+    { id: "cuda",  label: "CUDA",   os: "linux" },
+    { id: "rocm",  label: "ROCm",   os: "linux" },
+    { id: "cann",  label: "CANN",   os: "linux" },
+  ];
+  const POSTS = [
+    { os: "mac",   backend: "metal", href: "../tile-rs-vs-mojo.html",
+      title: "tile-rs on Apple GPU: our Metal backend against our Mojo backend" },
+    { os: "linux", backend: "cuda",  href: "ds4cuda-en.html", lead: true,
+      title: "ds4-rs-cuda vs. ds4.c — GB10 A/B progress" },
+    { os: "linux", backend: "cuda",  href: "ds4cuda-zh.html", title: "中文" },
+  ];
+  const BINS = [
+    { os: "linux", backend: "cuda", name: "ds4-rs-cuda", ok: true,
+      desc: "NVIDIA, aarch64. A controller, like the other two: it probes the GPU, plans placement and launches the engine. Built and verified on the GB10 in the row above." },
+    { os: "linux", backend: "rocm", name: "ds4-rs-amd", ok: true,
+      desc: "AMD ROCm, x86_64. A controller: it probes the hardware, plans the split and launches the ROCm engine." },
+    { os: "linux", backend: "cann", name: "ds4-rs-ascend", ok: true,
+      desc: "Huawei Ascend NPU, aarch64. A controller, like the AMD one: ds4-server does not build for this backend yet." },
+  ];
+  let curOS = "mac", curBE = "metal";
+
+  const osTabsEl = document.getElementById("ostabs");
+  const beTabsEl = document.getElementById("betabs");
+  const postEl   = document.getElementById("postlist");
+  const binsEl   = document.querySelector(".bins");
+  const linuxSec = document.getElementById("linuxsec");
+
+  function machinesFor(os, be) {
+    return BOXES.filter(b => b.os === os && b.backend === be);
+  }
+  // A backend is offerable if it belongs to this OS at all. Whether it has a
+  // measured machine is a separate question, answered in the tab's title.
+  function beEnabled(be) { return be.os === curOS; }
+
+  function renderPlatform() {
+    osTabsEl.innerHTML = "";
+    OSES.forEach(o => {
+      const t = document.createElement("button");
+      t.type = "button"; t.setAttribute("role", "tab");
+      t.textContent = o.label;
+      t.setAttribute("aria-selected", String(o.id === curOS));
+      t.addEventListener("click", () => selectOS(o.id));
+      osTabsEl.appendChild(t);
+    });
+    beTabsEl.innerHTML = "";
+    BACKENDS.forEach(b => {
+      const on = beEnabled(b);
+      const has = machinesFor(b.os, b.id).length > 0;
+      const t = document.createElement("button");
+      t.type = "button"; t.setAttribute("role", "tab");
+      t.textContent = b.label;
+      t.setAttribute("aria-selected", String(on && b.id === curBE));
+      if (!on) {
+        t.setAttribute("aria-disabled", "true");
+        t.title = `${b.label} does not run on ${OSES.find(o => o.id === curOS).label}`;
+      } else {
+        t.title = has ? `${b.label} — measured` : `${b.label} — supported, no measurement published yet`;
+        t.addEventListener("click", () => { curBE = b.id; renderAll(); });
+      }
+      beTabsEl.appendChild(t);
+    });
+  }
+
+  function selectOS(os) {
+    if (os === curOS) return;
+    curOS = os;
+    // Land on this OS's first backend that actually has a machine, so switching
+    // OS never drops the reader onto an empty table.
+    const mine = BACKENDS.filter(b => b.os === os);
+    const withRows = mine.find(b => machinesFor(os, b.id).length > 0);
+    curBE = (withRows || mine[0]).id;
+    renderAll();
+  }
+
+  function renderPosts() {
+    const ps = POSTS.filter(p => p.os === curOS && p.backend === curBE);
+    postEl.innerHTML = ps.length
+      ? ps.map(p => `<a href="${p.href}"${p.lead ? ' style="font-weight:700"' : ""}>${p.title}</a>`).join("")
+      : `<span class="none">no write-up for this combination yet</span>`;
+  }
+
+  function renderBins() {
+    if (!binsEl || !linuxSec) return;
+    // The download section is about Linux binaries; on macOS the answer is the
+    // App Store app in the masthead, so the whole section stands down.
+    linuxSec.hidden = curOS !== "linux";
+    const bs = BINS.filter(b => b.os === curOS && b.backend === curBE);
+    binsEl.innerHTML = bs.map(b => `<div class="bin"><span class="b-n">${b.name}</span>`
+      + `<span class="b-d">${b.desc}</span>`
+      + `<span class="b-s ${b.ok ? "b-yes" : "b-no"}">${b.ok ? "available" : "not packaged yet"}</span></div>`).join("");
+  }
+
+  function renderAll() {
+    renderPlatform();
+    renderPosts();
+    renderBins();
+    buildTabs();
+    render(0);
+  }
+
+  function buildTabs() {
+    tabsEl.innerHTML = "";
+    const shown = machinesFor(curOS, curBE);
+    shown.forEach((b, i) => {
+      const t = document.createElement("button");
+      t.type = "button"; t.setAttribute("role", "tab");
+      t.setAttribute("aria-controls", "modeltable");
+      t.textContent = b.label;
+      t.addEventListener("click", () => render(i));
+      t.addEventListener("keydown", e => {
+        const d = e.key === "ArrowRight" ? 1 : e.key === "ArrowLeft" ? -1 : 0;
+        if (!d) return;
+        e.preventDefault();
+        const n = (i + d + shown.length) % shown.length;
+        render(n); tabsEl.children[n].focus();
+      });
+      tabsEl.appendChild(t);
+    });
+  }
+
+  fetch("machines.json", { cache: "no-cache" })
+    .then(r => { if (!r.ok) throw new Error(`machines.json: HTTP ${r.status}`); return r.json(); })
+    .then(data => { BOXES = data.boxes || []; wireSortHeaders(); renderAll(); })
+    .catch(err => {
+      // Say so plainly. An empty table would read as a product that runs
+      // nothing, which is worse than admitting the data did not load.
+      noteEl.textContent = `Could not load the measurements (${err.message}).`;
+      rowsEl.innerHTML = `<tr><td colspan="4" class="na">measurements unavailable</td></tr>`;
+    });
+</script>
+
+</body>
+</html>
